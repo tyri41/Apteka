@@ -14,7 +14,7 @@ function connect() {
 }
 
 function close() {
-// close the database connection
+    // close the database connection
     db.close((err) => {
         if (err) {
             return console.error(err.message);
@@ -25,6 +25,7 @@ function close() {
 
 function init() {
     // in init.sql we put all CREATE TABLE etc.
+    // it should be run only once to set up a new database not on each startup
     let superCommand = fs.readFileSync('db/init.sql').toString();
     db.exec(superCommand, err => {
         if (err) throw err;
@@ -35,5 +36,16 @@ function init() {
 exports.test = function () {
     connect();
     init();
+    close();
+};
+
+// return specified entries of medicine from database
+exports.loadData = function (query, callback) {
+    connect();
+    let str = "SELECT * FROM Medicine";// where query
+    db.all(str, [], (err, rows) => {
+        console.log(rows);
+        callback(err, rows);
+    });
     close();
 };
