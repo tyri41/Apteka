@@ -11,25 +11,32 @@ app.use(express.json());
 // merged rows have the same value and their preceding columns are also merged
 function parseList(rows) {
     let table = [];
-    let prev = [null, null, null, null];
-    let ind = [-1, -1, -1, -1];
+    let prev = [null, null, null, null, null, null, null, null, null];
+    let ind = [-1, -1, -1, -1, -1, -1, -1, -1, -1];
     function setItem (i, j, val) {
         let item = { value: val, span: 0 };
         if(item.value == prev[j] && (j == 0 || table[i][j-1].span == 0)) {
-            table[ind[j]][j].span++;;
+            table[ind[j]][j].span++;
         } else {
             prev[j] = item.value;
             ind[j] = i;
             item.span = 1;
         }
         return item;
+        // name, substance, form, dose, content,
+            // EAN, refundation, scope, price
     }
-    for(i = 0;i<rows.length;i++) {
+    for(let i = 0;i<rows.length;i++) {
         table.push([]);
-        table[i].push(setItem(i, 0, rows[i].Name));
-        table[i].push(setItem(i, 1, rows[i].EAN));
-        table[i].push(setItem(i, 2, rows[i].Substance));
-        table[i].push(setItem(i, 3, rows[i].Form));
+        table[i].push(setItem(i, 0, rows[i].NAME));
+        table[i].push(setItem(i, 1, rows[i].SUBSTANCE));
+        table[i].push(setItem(i, 2, rows[i].FORM));
+        table[i].push(setItem(i, 3, rows[i].DOSE));
+        table[i].push(setItem(i, 4, rows[i].CONTENT));
+        table[i].push(setItem(i, 5, rows[i].EAN));
+        table[i].push(setItem(i, 6, rows[i].REFUNDATION));
+        table[i].push(setItem(i, 7, rows[i].SCOPE));
+        table[i].push(setItem(i, 8, rows[i].PRICE));
     }
     console.log(table);
     return table;
@@ -55,7 +62,7 @@ app.listen(8080, function() {
 // test database connection
 // db.test();
 // db.loadData( function (err, ret) {});
-db.loadData("haha", function (err, ret) {
+db.loadData("", function (err, ret) {
     parseList(ret);
 });
 

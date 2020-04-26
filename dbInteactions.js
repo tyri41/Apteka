@@ -42,7 +42,8 @@ exports.test = function () {
 // return specified entries of medicine from database
 exports.loadData = function (query, callback) {
     connect();
-    let str = "SELECT * FROM Medicine";// where query
+    let find = "\'%" + query + "%\'";
+    let str = "SELECT * FROM MEDICINE";// WHERE NAME LIKE " + find ;// where query
     db.all(str, [], (err, rows) => {
         console.log(rows);
         callback(err, rows);
