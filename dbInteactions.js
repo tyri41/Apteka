@@ -43,7 +43,7 @@ exports.test = function () {
 exports.loadData = function (query, callback) {
     connect();
     let find = "\'%" + query + "%\'";
-    let str = "SELECT * FROM MEDICINE";// WHERE NAME LIKE " + find ;// where query
+    let str = "SELECT * FROM Medicine WHERE Name LIKE " + find + " OR EAN LIKE " + find + " OR Substance LIKE " + find + " OR Form LIKE " + find;
     db.all(str, [], (err, rows) => {
         console.log(rows);
         callback(err, rows);

@@ -28,27 +28,27 @@ function parseList(rows) {
     }
     for(let i = 0;i<rows.length;i++) {
         table.push([]);
-        table[i].push(setItem(i, 0, rows[i].NAME));
-        table[i].push(setItem(i, 1, rows[i].SUBSTANCE));
-        table[i].push(setItem(i, 2, rows[i].FORM));
-        table[i].push(setItem(i, 3, rows[i].DOSE));
-        table[i].push(setItem(i, 4, rows[i].CONTENT));
+        table[i].push(setItem(i, 0, rows[i].Name));
+        table[i].push(setItem(i, 1, rows[i].Substance));
+        table[i].push(setItem(i, 2, rows[i].Form));
+        table[i].push(setItem(i, 3, rows[i].Dose));
+        table[i].push(setItem(i, 4, rows[i].Content));
         table[i].push(setItem(i, 5, rows[i].EAN));
-        table[i].push(setItem(i, 6, rows[i].REFUNDATION));
-        table[i].push(setItem(i, 7, rows[i].SCOPE));
-        table[i].push(setItem(i, 8, rows[i].PRICE));
+        table[i].push(setItem(i, 6, rows[i].Refundation));
+        table[i].push(setItem(i, 7, rows[i].Scope));
+        table[i].push(setItem(i, 8, rows[i].Price));
     }
     console.log(table);
     return table;
 }
 
 // get request for entries
-app.get(':find', (req, res) => {
+app.get('/find', (req, res) => {
     console.log('got a get');
-    console.log(req.path);
-    console.log(req.params);
-    console.log(req.query);
-    db.loadData(req.query, function (err, ret) {
+    // console.log(req.path);
+    // console.log(req.params);
+    console.log(req.query.q);
+    db.loadData(req.query.q, function (err, ret) {
         if(err) res.status(304).send(err);
         else    res.status(200).json(parseList(ret));
     });
@@ -62,8 +62,8 @@ app.listen(8080, function() {
 // test database connection
 // db.test();
 // db.loadData( function (err, ret) {});
-db.loadData("", function (err, ret) {
-    parseList(ret);
-});
+// db.loadData("", function (err, ret) {
+//     parseList(ret);
+// });
 
 //npm install express --save
