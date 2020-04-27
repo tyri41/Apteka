@@ -33,7 +33,7 @@ function init() {
     });
 }
 
-exports.test = function () {
+exports.setUpDatabase = function () {
     connect();
     init();
     close();
@@ -45,7 +45,8 @@ exports.loadData = function (query, callback) {
     let find = "\'%" + query + "%\'";
     let str = "SELECT * FROM Medicine WHERE Name LIKE " + find + " OR EAN LIKE " + find + " OR Substance LIKE " + find + " OR Form LIKE " + find;
     db.all(str, [], (err, rows) => {
-        console.log(rows);
+        // console.log(rows);
+        if(!err) console.log(rows.length + ' rows retrieved');
         callback(err, rows);
     });
     close();

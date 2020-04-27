@@ -23,8 +23,6 @@ function parseList(rows) {
             item.span = 1;
         }
         return item;
-        // name, substance, form, dose, content,
-            // EAN, refundation, scope, price
     }
     for(let i = 0;i<rows.length;i++) {
         table.push([]);
@@ -38,16 +36,14 @@ function parseList(rows) {
         table[i].push(setItem(i, 7, rows[i].Scope));
         table[i].push(setItem(i, 8, rows[i].Price));
     }
-    console.log(table);
+    // console.log(table);
     return table;
 }
 
 // get request for entries
 app.get('/find', (req, res) => {
-    console.log('got a get');
-    // console.log(req.path);
-    // console.log(req.params);
-    console.log(req.query.q);
+    console.log('got a GET');
+    console.log('querry is: ' + req.query.q);
     db.loadData(req.query.q, function (err, ret) {
         if(err) res.status(304).send(err);
         else    res.status(200).json(parseList(ret));
@@ -58,12 +54,3 @@ app.get('/find', (req, res) => {
 app.listen(8080, function() {
     console.log('server is running');
 });
-
-// test database connection
-// db.test();
-// db.loadData( function (err, ret) {});
-// db.loadData("", function (err, ret) {
-//     parseList(ret);
-// });
-
-//npm install express --save
