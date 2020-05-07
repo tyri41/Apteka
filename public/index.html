@@ -4,12 +4,17 @@
     <title>System wyszukujący leki refundowane</title>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <link href="style.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <meta charset="UTF-8">
 </head>
 
 <body>
-<input type="text" placeholder="Wyszukaj..." id="Textfield">
-<button type="button" onclick="search();">Szukaj</button>
+<div class="input-group mb-3" id="box">
+    <input type="text" id="Textfield" class="form-control" placeholder="Wyszukaj..." aria-label="Recipient's username" aria-describedby="button-addon2">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="button" onclick="search();">Szukaj</button>
+    </div>
+  </div>
 
 <script>
     const part = 200;
@@ -58,7 +63,6 @@
             alert("Pusta fraza wyszukiwania");
             return;
         }
-        //alert(window.location.href + "find?q=" + document.getElementById("Textfield").value);
         $.getJSON(window.location.href + "find?q=" + document.getElementById("Textfield").value, function(t) {
             table = t;
             page = 0;
@@ -96,7 +100,12 @@
         redraw();
     }
 </script>
-<div id="tables"><b>Currently no results.</b></div>
-<footer> <button id="b1" type="button" onclick="down();">&larr;</button> <button id="b2" type="button" onclick="up();">&rarr;</button><div id="Buttons" style="vertical-align: bottom"></div></footer>
+<div id="tables" style='padding: 5px;'><b>Na razie brak wyników</b></div>
+<footer> 
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-secondary" onclick="down();">&larr;</button>
+        <button type="button" class="btn btn-secondary" onclick="up();">&rarr;</button>
+      </div>
+</footer>
 </body>
 </html>
