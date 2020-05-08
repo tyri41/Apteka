@@ -56,6 +56,7 @@
         }
         tbl.appendChild(tbdy);
         box.appendChild(tbl);
+        document.getElementById('page').textContent = (page+1) + '';
     }
 
     function search() {
@@ -104,6 +105,7 @@
 <footer> 
     <div class="btn-group" role="group" aria-label="Basic example">
         <button type="button" class="btn btn-secondary" onclick="down();">&larr;</button>
+        <button type="button" class="btn btn-secondary" id="page"></button>
         <button type="button" class="btn btn-secondary" onclick="up();">&rarr;</button>
       </div>
 </footer>
