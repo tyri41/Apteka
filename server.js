@@ -5,6 +5,8 @@ var db = require('./dbInteactions');
 app.use(express.static('public'));
 app.use(express.json());
 
+let port = 8080;
+
 // parse sqlite output into matrix n x 4 of objects:
 // value = (field_content e.g. if column name was EAN value may be 123456789),
 // span = for how many rows should that value be spanned (0 if none)
@@ -24,7 +26,10 @@ function parseList(rows) {
         }
         return item;
     }
-    for(let i = 0;i<rows.length;i++) {
+    let size = rows.length;
+    let isLastPage = (size > 200);
+    size -= isLastPage;
+    for(let i = 0;i<size;i++) {
         table.push([]);
         table[i].push(setItem(i, 0, rows[i].Name));
         table[i].push(setItem(i, 1, rows[i].Substance));
@@ -37,20 +42,32 @@ function parseList(rows) {
         table[i].push(setItem(i, 8, rows[i].Price));
     }
     // console.log(table);
-    return table;
+    let ret = {table: table, isLastPage: isLastPage};
+    return ret;
 }
 
 // get request for entries
 app.get('/find', (req, res) => {
     console.log('got a GET');
     console.log('querry is: ' + req.query.q);
-    db.loadData(req.query.q, function (err, ret) {
+    console.log('page is: ' + req.query.p);
+    db.loadData(req.query.q, req.query.p, function (err, ret) {
         if(err) res.status(304).send(err);
         else    res.status(200).json(parseList(ret));
     });
 });
 
+// parse arguments -n is new database and -p is port
+for(var i = 0;i < process.argv.length; i++) {
+    if(process.argv[i] == '-n') console.log("loading database"); // TODO setUpDatabase here
+    if(process.argv[i] == '-p') {
+        var p = parseInt(process.argv[i+1], 10);
+        if (!isNaN(p)) port = p;
+        else console.log("please, provide a valid port");
+    }
+}
+
 // set up server
-app.listen(8080, function() {
-    console.log('server is running');
+app.listen(port, function() {
+    console.log('server is running on port ' + port);
 });

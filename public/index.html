@@ -64,8 +64,9 @@
             alert("Pusta fraza wyszukiwania");
             return;
         }
-        $.getJSON(window.location.href + "find?q=" + document.getElementById("Textfield").value, function(t) {
-            table = t;
+        $.getJSON(window.location.href + "find?q=" + document.getElementById("Textfield").value + "&p=1", function(t) {
+            table = t.table;
+            console.log(t.isLastPage);
             page = 0;
             for(var j = 0; j < atributes; j++) {
                 for(var i = 0; i < table.length; i++) {
