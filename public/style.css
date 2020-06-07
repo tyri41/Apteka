@@ -31,7 +31,7 @@ html {
   font-family: 'helvetica neue', helvetica, arial, sans-serif;
 }
 
-thead th, tfoot th {
+ thead th, tfoot th {
   font-family: 'Rock Salt', cursive;
 }
 
@@ -59,4 +59,13 @@ thead, tfoot {
 thead th, tfoot th, tfoot td {
   background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.5));
   border: 3px solid purple;
+}
+
+#box {
+  width: 400px;
+  padding: 6px;
+}
+
+footer {
+  padding: 4px;
 }

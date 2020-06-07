@@ -42,6 +42,12 @@ exports.setUpDatabase = function () {
 // return specified entries of medicine from database
 exports.loadData = function (query, callback) {
     connect();
+    let chars = ['<', '>', '%', '/', '#', '/', '(', ')', '"', "'"];
+    // console.log(query + " -> ");
+    for(var i of chars) {
+        query = query.replace(i, '');
+    }
+    console.log("replaced by: " + query);
     let find = "\'%" + query + "%\'";
     let str = "SELECT * FROM Medicine WHERE Name LIKE " + find + " OR EAN LIKE " + find + " OR Substance LIKE " + find + " OR Form LIKE " + find;
     db.all(str, [], (err, rows) => {
