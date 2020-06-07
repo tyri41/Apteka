@@ -59,7 +59,10 @@ app.get('/find', (req, res) => {
 
 // parse arguments -n is new database and -p is port
 for(var i = 0;i < process.argv.length; i++) {
-    if(process.argv[i] == '-n') console.log("loading database"); // TODO setUpDatabase here
+    if(process.argv[i] == '-n') {
+        console.log("loading database");
+        db.setUpDatabase();
+    }
     if(process.argv[i] == '-p') {
         var p = parseInt(process.argv[i+1], 10);
         if (!isNaN(p)) port = p;
