@@ -25,7 +25,7 @@
     var phrase = "";
     
     var change = 0;
-
+	
     function redraw() {
         page += change;
         change = 0;
@@ -43,10 +43,6 @@
         for (var j = 0; j < atributes; j++) {
             var th = document.createElement('th');
             th.appendChild(document.createTextNode(etiquettes[j]));
-            th.addEventListener("click", function(){
-                document.getElementById("Textfield").value = etiquettes[j];
-                search();
-            });
             labels.appendChild(th);
         }
         tbl.appendChild(labels);
@@ -55,7 +51,12 @@
             for (var j = 0; j < atributes; j++) {
                 if(table[i][j].span > 0){
                     var td = document.createElement('td');
-                    td.appendChild(document.createTextNode(table[i][j].value));
+					var t = document.createTextNode(table[i][j].value);
+                    td.appendChild(t);
+					td.addEventListener("click", function(){
+						document.getElementById("Textfield").value = this.innerHTML;
+						search();
+					});
                     td.setAttribute('rowSpan', table[i][j].span);
                     tr.appendChild(td);
                 }
@@ -70,14 +71,13 @@
     function search() {
         page = 1;
         change = 0;
-        phrase = document.getElementById("Textfield").value;
+        phrase = document.getElementById("Textfield").value.replace(/[^a-z0-9]/gi,'');
         if(phrase.length == 0) {
             alert("Pusta fraza wyszukiwania");
             return;
         }
         $.getJSON(window.location.href + "find?q=" + phrase + "&p=1", function(t) {
             table = t.table;
-            console.log(t.isLastPage);
             redraw();
         });
     }
@@ -89,7 +89,6 @@
         }
         $.getJSON(window.location.href + "find?q=" + phrase + "&p=" + (page + change), function(t) {
             table = t.table;
-            console.log(t.isLastPage);
             redraw();
         });
     }
@@ -101,7 +100,7 @@
     }
 
     function up() {
-        if(page < 10 && (change == 0 || change == 1))
+        if(!t.isLastPage && (change == 0 || change == 1))
             change = 1;
         research();
     }
