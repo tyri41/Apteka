@@ -17,14 +17,18 @@
   </div>
 
 <script>
-    const part = 200;
-
     const atributes = 9;
 
     var table;
     var page = 0;
+    
+    var phrase = "";
+    
+    var change = 0;
 
     function redraw() {
+        page += change;
+        change = 0;
         var box = document.getElementById("tables");
         while (box.firstChild)
         {
@@ -39,10 +43,14 @@
         for (var j = 0; j < atributes; j++) {
             var th = document.createElement('th');
             th.appendChild(document.createTextNode(etiquettes[j]));
+            th.addEventListener("click", function(){
+                document.getElementById("Textfield").value = etiquettes[j];
+                search();
+            });
             labels.appendChild(th);
         }
         tbl.appendChild(labels);
-        for (var i = page * part; i < Math.min((page + 1) * part, table.length); i++) {
+        for (var i = 0; i < table.length; i++) {
             var tr = document.createElement('tr');
             for (var j = 0; j < atributes; j++) {
                 if(table[i][j].span > 0){
@@ -60,46 +68,42 @@
     }
 
     function search() {
-        if(document.getElementById("Textfield").value.length == 0) {
+        page = 1;
+        change = 0;
+        phrase = document.getElementById("Textfield").value;
+        if(phrase.length == 0) {
             alert("Pusta fraza wyszukiwania");
             return;
         }
-        $.getJSON(window.location.href + "find?q=" + document.getElementById("Textfield").value + "&p=1", function(t) {
+        $.getJSON(window.location.href + "find?q=" + phrase + "&p=1", function(t) {
             table = t.table;
             console.log(t.isLastPage);
-            page = 0;
-            for(var j = 0; j < atributes; j++) {
-                for(var i = 0; i < table.length; i++) {
-                    if(i % part == 0) {
-                        var x = i;
-                        while(table[x][j].span == 0)
-                            x--;
-                        if(x != i) {
-                            table[i][j].span = table[x][j].span - (i - x);
-                            table[x][j].span = i - x;
-                        }
-                    }
-                }
-            }
+            redraw();
+        });
+    }
+    
+    function research() {
+        if(phrase.length == 0) {
+            alert("Pusta fraza wyszukiwania");
+            return;
+        }
+        $.getJSON(window.location.href + "find?q=" + phrase + "&p=" + (page + change), function(t) {
+            table = t.table;
+            console.log(t.isLastPage);
             redraw();
         });
     }
 
     function down() {
-        if(page > 0)
-            page--;
-        redraw();
+        if(page > 1 && (change == 0 || change == -1))
+            change = -1;
+        research();
     }
 
     function up() {
-        if(page < Math.ceil(table.length / part) - 1)
-            page++;
-        redraw();
-    }
-
-    function scroll(btn) {
-        page = parseInt(btn.innerHTML);
-        redraw();
+        if(page < 10 && (change == 0 || change == 1))
+            change = 1;
+        research();
     }
 </script>
 <div id="tables" style='padding: 5px;'><b>Na razie brak wyników</b></div>
