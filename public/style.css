@@ -2,7 +2,7 @@
 
 table {
   table-layout: fixed;
-  width: 100%;
+  text-align: center;
   border-collapse: collapse;
   border: 3px solid purple;
 }
@@ -23,8 +23,10 @@ thead th:nth-child(4) {
   width: 35%;
 }
 
-th, td {
+td {
+  border: 1px solid purple;
   padding: 20px;
+  letter-spacing: 1px;
 }
 
 html {
@@ -37,10 +39,14 @@ html {
 
 th {
   letter-spacing: 2px;
+  border: 2px solid purple;
+  padding: 20px;
 }
 
-td {
-  letter-spacing: 1px;
+td:hover{
+	background-color: AliceBlue;
+	color: Crimson;
+	cursor: pointer;
 }
 
 tbody td {
