@@ -12,23 +12,23 @@
 <div class="input-group mb-3" id="box">
     <input type="text" id="Textfield" class="form-control" placeholder="Wyszukaj..." aria-label="Recipient's username" aria-describedby="button-addon2">
     <div class="input-group-append">
-      <button class="btn btn-outline-secondary" type="button" onclick="search();">Szukaj</button>
+      <button class="btn btn-outline-secondary" type="button" onclick="searcher();">Szukaj</button>
     </div>
   </div>
 
 <script>
     const atributes = 9;
 
-    var table;
+    var table = null;
     var page = 0;
     
     var phrase = "";
     
     var change = 0;
 	
+	var last = false;
+	
     function redraw() {
-        page += change;
-        change = 0;
         var box = document.getElementById("tables");
         while (box.firstChild)
         {
@@ -44,64 +44,96 @@
             labels.appendChild(th);
         }
         tbl.appendChild(labels);
-        for (var i = 0; i < table.length; i++) {
-            var tr = document.createElement('tr');
-            for (var j = 0; j < atributes; j++) {
-                if(table[i][j].span > 0){
-                    var td = document.createElement('td');
-					var t = document.createTextNode(table[i][j].value);
-                    td.appendChild(t);
-					td.addEventListener("click", function(){
-						document.getElementById("Textfield").value = this.innerHTML;
-						search();
-					});
-                    td.setAttribute('rowSpan', table[i][j].span);
-                    tr.appendChild(td);
-                }
-            }
-            tbdy.appendChild(tr);
-        }
+		if(table) {
+			for (var i = 0; i < table.length; i++) {
+				var tr = document.createElement('tr');
+				for (var j = 0; j < atributes; j++) {
+					if(table[i][j].span > 0){
+						var td = document.createElement('td');
+						var t = document.createTextNode(table[i][j].value);
+						td.appendChild(t);
+						td.addEventListener("click", function(){
+							document.getElementById("Textfield").value = this.innerHTML;
+							page = 0;
+							document.getElementById('page').textContent = (page) + '';
+							search();
+						});
+						td.setAttribute('rowSpan', table[i][j].span);
+						tr.appendChild(td);
+					}
+				}
+				tbdy.appendChild(tr);
+			}
+		}
         tbl.appendChild(tbdy);
         box.appendChild(tbl);
-        document.getElementById('page').textContent = (page+1) + '';
+        document.getElementById('page').textContent = (page) + '';
+    }
+	
+	function searcher() {
+        page = 0;
+		document.getElementById('page').textContent = (page) + '';
+		search();
     }
 
     function search() {
-        page = 1;
-        change = 0;
-        phrase = document.getElementById("Textfield").value.replace(/[^a-z0-9]/gi,'');
+        phrase = document.getElementById("Textfield").value.replace(/[^a-z .()0-9]/gi,'');
         if(phrase.length == 0) {
             alert("Pusta fraza wyszukiwania");
             return;
         }
-        $.getJSON(window.location.href + "find?q=" + phrase + "&p=1", function(t) {
-            table = t.table;
-            redraw();
-        });
-    }
-    
-    function research() {
-        if(phrase.length == 0) {
-            alert("Pusta fraza wyszukiwania");
-            return;
-        }
-        $.getJSON(window.location.href + "find?q=" + phrase + "&p=" + (page + change), function(t) {
-            table = t.table;
-            redraw();
-        });
+        var loc = window.location;
+		window.location = loc.protocol + '//' + loc.host + loc.pathname + "?q=" + phrase + "&p=" + page;
     }
 
     function down() {
-        if(page > 1 && (change == 0 || change == -1))
-            change = -1;
-        research();
+        if(page > 0)
+		{
+			page--;
+			search();
+		}
     }
 
     function up() {
-        if(!t.isLastPage && (change == 0 || change == 1))
-            change = 1;
-        research();
+        if(last == false) {
+			page++;
+			search();
+		}
     }
+	
+	function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+          tmp = item.split("=");
+          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;	
+	}
+	
+	
+	phrase = findGetParameter("q");
+	if(phrase)
+		document.getElementById("Textfield").value = phrase;
+	page = findGetParameter("p");
+	if(!page)
+		page = 0;
+	if(phrase) {
+		$.getJSON(window.location.protocol + '//' + window.location.host + window.location.pathname + "find?q=" + phrase.replace(/[^a-z .()0-9]/gi,'') + "&p=" + page, function(t) {
+			if(t) {
+				table = t.table;
+				last = !t.isLastPage;
+				redraw();
+			}
+			else {
+				alert("Communication error!");
+			}
+		});
+	}
+
 </script>
 <div id="tables" style='padding: 5px;'><b>Na razie brak wyników</b></div>
 <footer> 
