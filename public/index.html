@@ -77,7 +77,7 @@
     }
 
     function search() {
-        phrase = document.getElementById("Textfield").value.replace(/[^a-z .()0-9]/gi,'');
+        phrase = document.getElementById("Textfield").value.replace(/[^a-z .()0-9]/gi,'_');
         if(phrase.length == 0) {
             alert("Pusta fraza wyszukiwania");
             return;
@@ -122,7 +122,7 @@
 	if(!page)
 		page = 0;
 	if(phrase) {
-		$.getJSON(window.location.protocol + '//' + window.location.host + window.location.pathname + "find?q=" + phrase.replace(/[^a-z .()0-9]/gi,'') + "&p=" + page, function(t) {
+		$.getJSON(window.location.protocol + '//' + window.location.host + window.location.pathname + "find?q=" + phrase.replace(/[^a-z .()0-9]/gi,'_') + "&p=" + page, function(t) {
 			if(t) {
 				table = t.table;
 				last = !t.isLastPage;
