@@ -2,7 +2,7 @@ const sqlite3 = require('sqlite3').verbose();
 var fs = require('fs');
 
 let db;
-let collNames = ['Name', 'Substance', 'Form', 'Dose', 'Content', 'EAN', 'refundation'];
+let collNames = ['Name', 'Substance', 'Form', 'Dose', 'Content', 'EAN', 'Scope'];
 const PAGELIM = 200;
 exports.PAGELIM = PAGELIM;
 
@@ -49,13 +49,13 @@ exports.loadData = function (query, page, callback) {
     let chars = ['<', '>', '%', '/', '#', '/', '(', ')', '"', "'"];
     // console.log(query + " -> ");
     for(var i of chars) {
-        query = query.replace(i, '');
+        query = query.replace(i, '_');
     }
     console.log("replaced by: " + query);
     let find = "\'%" + query + "%\'";
     let str = "SELECT * FROM Medicine WHERE ";
     for(var val in collNames) {
-        str += collNames[val] + " LIKE " + find + " OR "//" EAN LIKE " + find + " OR Substance LIKE " + find + " OR Form LIKE " + find;
+        str += collNames[val] + " LIKE " + find + " OR ";
     }
     str = str.slice(0, -3);
     str += "LIMIT " + (PAGELIM + 1) + " OFFSET " + page * PAGELIM;
