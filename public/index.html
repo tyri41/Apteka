@@ -38,7 +38,8 @@
         var tbdy = document.createElement('tbody');
         var labels = document.createElement('tr');
         var etiquettes = ["Nazwa", "Substancja czynna", "Postać", "Dawka", "Zawartość opakowania", "Kod EAN lub inny kod odpowiadający kodowi EAN", "Poziom odpłatności", "Zakres wskazań objętych refundacją", "Wysokość dopłaty świadczeniobiorcy"];
-        for (var j = 0; j < atributes; j++) {
+        var clickable = [true, true, true, true, true, true, true, true];
+	for (var j = 0; j < atributes; j++) {
             var th = document.createElement('th');
             th.appendChild(document.createTextNode(etiquettes[j]));
             labels.appendChild(th);
@@ -52,12 +53,13 @@
 						var td = document.createElement('td');
 						var t = document.createTextNode(table[i][j].value);
 						td.appendChild(t);
-						td.addEventListener("click", function(){
-							document.getElementById("Textfield").value = this.innerHTML;
-							page = 0;
-							document.getElementById('page').textContent = (page) + '';
-							search();
-						});
+						if(clickable[j])
+							td.addEventListener("click", function(){
+								document.getElementById("Textfield").value = this.innerHTML;
+								page = 0;
+								document.getElementById('page').textContent = (page) + '';
+								search();
+							});
 						td.setAttribute('rowSpan', table[i][j].span);
 						tr.appendChild(td);
 					}
@@ -77,13 +79,13 @@
     }
 
     function search() {
-        phrase = document.getElementById("Textfield").value.replace(/[^a-z .()0-9]/gi,'_');
+        phrase = document.getElementById("Textfield").value;
         if(phrase.length == 0) {
             alert("Pusta fraza wyszukiwania");
             return;
         }
         var loc = window.location;
-		window.location = loc.protocol + '//' + loc.host + loc.pathname + "?q=" + phrase + "&p=" + page;
+		window.location = loc.protocol + '//' + loc.host + loc.pathname + "?q=" + escape(phrase) + "&p=" + page;
     }
 
     function down() {
@@ -122,7 +124,7 @@
 	if(!page)
 		page = 0;
 	if(phrase) {
-		$.getJSON(window.location.protocol + '//' + window.location.host + window.location.pathname + "find?q=" + phrase.replace(/[^a-z .()0-9]/gi,'_') + "&p=" + page, function(t) {
+		$.getJSON(window.location.protocol + '//' + window.location.host + window.location.pathname + "find?q=" + escape(phrase) + "&p=" + page, function(t) {
 			if(t) {
 				table = t.table;
 				last = !t.isLastPage;
