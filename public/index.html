@@ -38,7 +38,7 @@
         var tbdy = document.createElement('tbody');
         var labels = document.createElement('tr');
         var etiquettes = ["Nazwa", "Substancja czynna", "Postać", "Dawka", "Zawartość opakowania", "Kod EAN lub inny kod odpowiadający kodowi EAN", "Poziom odpłatności", "Zakres wskazań objętych refundacją", "Wysokość dopłaty świadczeniobiorcy"];
-        var clickable = [true, true, true, true, true, true, true, true];
+        var clickable = [true, true, true, true, true, true, true, false];
 	for (var j = 0; j < atributes; j++) {
             var th = document.createElement('th');
             th.appendChild(document.createTextNode(etiquettes[j]));
