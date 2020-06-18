@@ -85,7 +85,7 @@
             return;
         }
         var loc = window.location;
-		window.location = loc.protocol + '//' + loc.host + loc.pathname + "?q=" + encodeURI(phrase) + "&p=" + page;
+		window.location = loc.protocol + '//' + loc.host + loc.pathname + "?q=" + encodeURIComponent(phrase) + "&p=" + page;
     }
 
     function down() {
@@ -124,7 +124,7 @@
 	if(!page)
 		page = 0;
 	if(phrase) {
-		$.getJSON(window.location.protocol + '//' + window.location.host + window.location.pathname + "find?q=" + encodeURI(phrase) + "&p=" + page, function(t) {
+		$.getJSON(window.location.protocol + '//' + window.location.host + window.location.pathname + "find?q=" + encodeURIComponent(phrase) + "&p=" + page, function(t) {
 			if(t) {
 				table = t.table;
 				last = !t.isLastPage;
